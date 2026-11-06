@@ -92,20 +92,20 @@
           ease: 'sine.inOut',
         }, '+=.2')
         .add(() => this.sparkle(envelope))
-        .fromTo(burst, { scale: .2, autoAlpha: .95 }, { scale: 3, autoAlpha: 0, duration: 1.8, ease: 'power2.out' }, '<')
+        .fromTo(burst, { scale: .2, autoAlpha: .95 }, { scale: 3, autoAlpha: 0, duration: 1.0, ease: 'power2.out' }, '<')
         .add(open, '<.2');
     },
 
     /** Transición cinematográfica del sobre a la carta. */
     exitIntro(intro, done) {
       if (!motion()) {
-        intro.style.transition = 'opacity .9s';
+        intro.style.transition = 'opacity .5s';
         intro.style.opacity = 0;
         setTimeout(done, reduced ? 50 : 900);
         return;
       }
       gsap.timeline({ onComplete: done })
-        .to(intro.querySelector('.intro__inner'), { scale: 1.1, autoAlpha: 0, filter: 'blur(6px)', duration: 1.6, ease: 'power2.inOut' })
+        .to(intro.querySelector('.intro__inner'), { scale: 1.1, autoAlpha: 0, filter: 'blur(6px)', duration: 1.0, ease: 'power2.inOut' })
         .to(intro, { autoAlpha: 0, duration: 1, ease: 'power1.out' }, '-=.6');
     },
 

@@ -1,12 +1,12 @@
 /* ==========================================================================
    MAIN — arranque, apertura del sobre, placeholders de imágenes,
-   enlaces de mapas y botón "Copiar datos".
+   enlaces de mapas, botón "Copiar datos" y reproductor flotante (disco).
    ========================================================================== */
 (function () {
   'use strict';
 
-  /* ---------- Scroll: que el navegador no "recuerde" dónde te quedaste ---------- */ // NUEVO
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';              // NUEVO
+  /* ---------- Scroll: que el navegador no "recuerde" dónde te quedaste ---------- */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
   const CFG = window.WEDDING_CONFIG || {};
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
@@ -97,6 +97,42 @@
     });
   }
 
+  /* ---------- Reproductor: en móvil se pliega a un disco flotante ---------- */ // NUEVO
+  function initPlayerDisc() {
+    const player = $('#player');
+    if (!player) return;
+    const cover = $('.player__cover', player);
+    const phone = window.matchMedia('(max-width: 767px)');   // mismo corte que el CSS
+
+    const docked = () => player.classList.contains('player--docked');   // ya flotante (tras abrir el sobre)
+    const toggle = () => { if (docked() && phone.matches) player.classList.toggle('is-expanded'); };
+
+    // Accesibilidad: la portada actúa como botón solo cuando es disco
+    const sync = () => {
+      if (docked() && phone.matches) {
+        cover.setAttribute('role', 'button');
+        cover.setAttribute('tabindex', '0');
+        cover.setAttribute('aria-label', 'Abrir o cerrar el reproductor de música');
+        cover.setAttribute('aria-expanded', player.classList.contains('is-expanded'));
+      } else {
+        ['role', 'tabindex', 'aria-label', 'aria-expanded'].forEach((a) => cover.removeAttribute(a));
+        if (player.classList.contains('is-expanded')) player.classList.remove('is-expanded');
+      }
+    };
+    // Cada vez que cambian las clases del reproductor (p. ej. al acoplarse), se re-sincroniza
+    new MutationObserver(sync).observe(player, { attributes: true, attributeFilter: ['class'] });
+    phone.addEventListener('change', sync);
+
+    cover.addEventListener('click', toggle);                             // tocar el disco = abrir / cerrar
+    cover.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+    document.addEventListener('click', (e) => {                          // tocar fuera = plegar
+      if (docked() && !player.contains(e.target)) player.classList.remove('is-expanded');
+    });
+    sync();
+  }
+
   /* ---------- Apertura del sobre ---------- */
   function initEnvelope() {
     const intro = $('#intro');
@@ -114,8 +150,8 @@
       document.body.classList.remove('is-locked');
       main.inert = false;
       main.removeAttribute('aria-hidden');
-      window.scrollTo({ top: 0, behavior: 'instant' });  // NUEVO: 'instant' ignora el scroll-behavior: smooth del CSS
-      window.WeddingAnimations.stopIntro();              // NUEVO: detiene las animaciones infinitas del sobre
+      window.scrollTo({ top: 0, behavior: 'instant' });  // 'instant' ignora el scroll-behavior: smooth del CSS
+      window.WeddingAnimations.stopIntro();              // detiene las animaciones infinitas del sobre
       window.WeddingAnimations.revealHero();
       window.WeddingAnimations.initScroll();
 
@@ -150,6 +186,7 @@
     const safe = (name, fn) => { try { fn(); } catch (err) { console.error(`[${name}]`, err); } };
     safe('animations', () => window.WeddingAnimations.prepare());
     safe('player', () => window.WeddingPlayer.init());
+    safe('player-disc', initPlayerDisc);   // NUEVO: va después de 'player'
     safe('countdown', () => window.WeddingCountdown.init());
     safe('gallery', () => window.WeddingGallery.init());
     safe('rsvp', () => window.WeddingRSVP.init());
@@ -157,7 +194,7 @@
     safe('gifts', initGifts);
     safe('envelope', initEnvelope);
 
-    // NUEVO: al volver a la pestaña o con el botón "atrás", recalcula posiciones del scroll
+    // Al volver a la pestaña o con el botón "atrás", recalcula posiciones del scroll
     const resync = () => { if (window.ScrollTrigger) ScrollTrigger.refresh(); };
     window.addEventListener('pageshow', (e) => { if (e.persisted) resync(); });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) resync(); });

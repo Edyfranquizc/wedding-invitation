@@ -34,7 +34,10 @@
   --c-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23CBAE71' stroke-width='1' transform='matrix(1 0 0 -1 0 40)'%3E%3Cpath d='M2 38V14C2 7 7 2 14 2h24'/%3E%3Cpath d='M7 32V17c0-6 4-10 10-10h15' stroke-width='.6'/%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3Cpath d='M12 12c6 0 9 3 9 9M12 12c0 6 3 9 9 9' stroke-width='.6'/%3E%3C/g%3E%3C/svg%3E");
   --c-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23CBAE71' stroke-width='1' transform='matrix(-1 0 0 -1 40 40)'%3E%3Cpath d='M2 38V14C2 7 7 2 14 2h24'/%3E%3Cpath d='M7 32V17c0-6 4-10 10-10h15' stroke-width='.6'/%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3Cpath d='M12 12c6 0 9 3 9 9M12 12c0 6 3 9 9 9' stroke-width='.6'/%3E%3C/g%3E%3C/svg%3E");
 
-  --gutter: 1.25rem;----- */
+  ----- */
+
+  /* ----- Márgenes laterales ----- */
+  --gutter: 1.25rem;   /* móvil; en pantallas de 700px o más pasa a 2rem */
 }
 
 /* ----- Base ----- */
@@ -472,12 +475,12 @@ body::before {
   --cam-h: 30.5%;     /* 321px  / 1054 */
   position: relative; display: block; width: min(100%, 640px); margin: 0 auto;
   padding: 0; border: 0; background: none; cursor: pointer;
-  line-height: 0;     /* NUEVO: evita el hueco bajo la imagen que desplazaba la pantalla */
+  line-height: 0;     /* evita el hueco bajo la imagen que desplazaba la pantalla */
   transition: transform .4s cubic-bezier(.2,.7,.2,1);
 }
 .camera:hover { transform: rotate(-2deg) scale(1.02); }
 .camera:active { transform: scale(.98); }
-.camera__body { position: relative; z-index: 1; display: block; width: 100%; pointer-events: none; } /* NUEVO: display:block */
+.camera__body { position: relative; z-index: 1; display: block; width: 100%; pointer-events: none; } /* display:block */
 .camera__screen {
   position: absolute; z-index: 2;
   top: var(--cam-top); left: var(--cam-left); width: var(--cam-w); height: var(--cam-h);
@@ -488,7 +491,7 @@ body::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(135deg, rgba(255,255,255,.22) 0%, transparent 38%);
 }
-.camera__screen img { display: block; width: 100%; height: 100%; object-fit: cover; } /* NUEVO: display:block */
+.camera__screen img { display: block; width: 100%; height: 100%; object-fit: cover; } /* display:block */
 .camera.is-developing .camera__screen img { animation: develop 1.6s ease-out; }
 @keyframes develop {
   0% { filter: brightness(2.4) sepia(.7) blur(4px) contrast(.6); }
@@ -673,6 +676,95 @@ body::before {
   .player__eq { display: none; }
   .countdown__unit { padding-inline: 0; }
   .countdown__label { letter-spacing: .14em; font-size: .58rem; }
+}
+
+/* ----- Reproductor: animaciones del disco ----- */
+@keyframes disc-spin { to { transform: rotate(360deg); } }          /* el disco gira al sonar */
+@keyframes disc-pulse {                                              /* aro dorado que invita a tocar */
+  0%, 100% { box-shadow: 0 16px 34px -14px rgba(30,40,54,.55), 0 0 0 0 rgba(203,174,113,.55); }
+  50%      { box-shadow: 0 16px 34px -14px rgba(30,40,54,.55), 0 0 0 9px rgba(203,174,113,0); }
+}
+
+/* ----- Móvil: botón "Abrir invitación" y reproductor ----- */
+@media (max-width: 767px) {
+
+  /* ----- Botón: más pequeño y separado del sobre ----- */
+  .envelope { margin-bottom: calc(var(--w) * -.11); }  /* quita el solape negativo que lo dejaba pegado */
+  .btn--open {
+    --gap-open: 1.4rem;               /* sube/baja este valor para acercar o alejar el botón del sobre */
+    margin: var(--gap-open) 0 0;
+    min-height: 42px;
+    padding: .6rem 1.4rem;
+    gap: .45rem;
+    font-size: .68rem;
+    letter-spacing: .18em;
+  }
+  .btn--open .icon { width: 1em; height: 1em; }
+
+  /* ----- Reproductor en el sobre: versión compacta ----- */
+  .intro .player:not(.player--docked) {
+    width: min(100%, 250px);
+    grid-template-columns: 40px 1fr;
+    gap: .6rem;
+    margin-top: .9rem;                /* pisa el margen negativo que lo pegaba al botón */
+    padding: .5rem .7rem .5rem .5rem;
+    border-radius: 14px;
+  }
+  .intro .player:not(.player--docked) .player__cover { width: 40px; height: 40px; border-radius: 8px; }
+  .intro .player:not(.player--docked) .player__title { font-size: .78rem; }
+  .intro .player:not(.player--docked) .player__artist { font-size: .66rem; }
+  .intro .player:not(.player--docked) .player__btn { width: 30px; height: 30px; }
+  .intro .player:not(.player--docked) .player__btn .icon { width: 14px; height: 14px; }
+  .intro .player:not(.player--docked) .player__row { margin-top: .2rem; gap: .4rem; }
+  .intro .player:not(.player--docked) .player__time { font-size: .6rem; min-width: 2em; }
+  .intro .player:not(.player--docked) .player__eq { display: none; }
+
+  /* ----- Reproductor flotante: base (abierto) ----- */
+  body.has-player { padding-bottom: 76px; }
+  .player--docked {
+    left: auto;
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(14px, env(safe-area-inset-bottom));
+    margin: 0;
+    width: min(calc(100vw - 28px), 300px);
+    grid-template-columns: 44px 1fr;
+    gap: .65rem;
+    padding: .5rem .8rem .5rem .5rem;
+    border-radius: 16px;
+    transition: width .35s cubic-bezier(.2,.7,.2,1), padding .35s, border-radius .35s;
+  }
+  .player--docked .player__eq { display: none; }
+
+  /* La portada se convierte en un vinilo */
+  .player--docked .player__cover {
+    position: relative;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .player--docked .player__cover::after {   /* agujero central del disco */
+    content: '';
+    position: absolute; left: 50%; top: 50%;
+    width: 22%; aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: var(--ivory);
+    box-shadow: 0 0 0 1.5px var(--gold), inset 0 0 0 2px rgba(53,55,50,.15);
+  }
+  .player--docked.is-playing .player__cover { animation: disc-spin 6s linear infinite; }
+
+  /* ----- Reproductor flotante: cerrado = solo el disco ----- */
+  .player--docked:not(.is-expanded) {
+    width: 56px; height: 56px;
+    padding: 0; gap: 0;
+    grid-template-columns: 1fr;
+    place-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .player--docked:not(.is-expanded) .player__body { display: none; }       /* oculta título y controles */
+  .player--docked:not(.is-expanded) .player__cover { width: 54px; height: 54px; }
+  .player--docked:not(.is-expanded):not(.is-playing) { animation: disc-pulse 2.8s ease-in-out infinite; }
 }
 
 /* ----- Sin animaciones (si el usuario lo pide o GSAP no cargó) ----- */

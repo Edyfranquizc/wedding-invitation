@@ -173,8 +173,8 @@ body::before {
 .intro__flower--tl { top: 8px; left: -18px; }
 .intro__flower--br { bottom: 8px; right: -18px; transform: rotate(180deg); }
 .cupid { position: absolute; z-index: 1; width: clamp(64px, 17vw, 150px); pointer-events: none; }
-.cupid--left { top: 12%; left: 15%; }
-.cupid--right { bottom: 16%; right: 15%; }
+.cupid--left { top: 20%; left: 15%; }
+.cupid--right { bottom: 20%; right: 15%; }
 
 /* ----- Sobre ----- */
 /* Usa tus dos PNG tal cual (sin modificar el sobre ni el sello).
@@ -460,7 +460,7 @@ body::before {
 .album__item--d img { aspect-ratio: 4 / 5; }
 .album__item--e img { aspect-ratio: 3 / 2; }
 .album__cupid { position: absolute; width: clamp(60px, 14vw, 120px); right: -6px; bottom: -40px; pointer-events: none; }
-
+.album__cupid--left { left: 10%; }
 /* ----- Cámara ----- */
 .camera-block { display: grid; gap: 1.8rem; align-items: center; max-width: 1140px; margin: 6.5rem auto 0; text-align: center; }
 .camera-block__text p:last-child { margin: .8rem auto 0; max-width: 22rem; }
@@ -669,6 +669,7 @@ body::before {
   .album__item--d { grid-column: 6 / 9; grid-row: 2; margin-top: 1rem; }
   .album__item--e { grid-column: 9 / 13; grid-row: 2; margin-top: -5rem; align-self: end; }
   .filmstrip__track { justify-content: safe center; }
+  
 }
 @media (max-width: 420px) {
   .player { grid-template-columns: 48px 1fr; }
@@ -676,6 +677,7 @@ body::before {
   .player__eq { display: none; }
   .countdown__unit { padding-inline: 0; }
   .countdown__label { letter-spacing: .14em; font-size: .58rem; }
+  
 }
 
 /* ----- Reproductor: animaciones del disco ----- */

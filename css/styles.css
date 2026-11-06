@@ -173,7 +173,7 @@ body::before {
 .intro__flower--tl { top: 8px; left: -18px; }
 .intro__flower--br { bottom: 8px; right: -18px; transform: rotate(180deg); }
 .cupid { position: absolute; z-index: 1; width: clamp(64px, 17vw, 150px); pointer-events: none; }
-.cupid--left { top: 20%; left: 12%; }
+.cupid--left { top: 25%; left: 12%; }
 .cupid--right { bottom: 23.8%; right: 15%; }
 
 /* ----- Sobre ----- */

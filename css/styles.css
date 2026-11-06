@@ -173,8 +173,8 @@ body::before {
 .intro__flower--tl { top: 8px; left: -18px; }
 .intro__flower--br { bottom: 8px; right: -18px; transform: rotate(180deg); }
 .cupid { position: absolute; z-index: 1; width: clamp(64px, 17vw, 150px); pointer-events: none; }
-.cupid--left { top: 20%; left: 5%; }
-.cupid--right { bottom: 20%; right: 15%; }
+.cupid--left { top: 22%; left: 12%; }
+.cupid--right { bottom: 23.8%; right: 15%; }
 
 /* ----- Sobre ----- */
 /* Usa tus dos PNG tal cual (sin modificar el sobre ni el sello).
@@ -773,4 +773,40 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   html { scroll-behavior: auto; }
+}
+
+/* ===== Fuentes: evita el parpadeo de letras claras al recargar ===== */
+.js:not(.fonts-ready) .intro__inner > .eyebrow,
+.js:not(.fonts-ready) .intro__names { opacity: 0; }
+
+/* ===== Botón "Abrir invitación": regla limpia (reemplaza las duplicadas) ===== */
+.btn--open { position: relative; z-index: 10; margin: -1.5rem 0 2rem; }
+
+/* ===== Historia: centrado en celular ===== */
+@media (max-width: 699px) {
+  .story__intro { text-align: center; padding-inline: .5rem; }
+  .story__intro::first-letter {
+    float: none; margin: 0; font-family: inherit; font-style: inherit;
+    font-size: inherit; line-height: inherit; color: inherit;
+  }
+  .btn { padding: .8rem 1.4rem; font-size: .72rem; letter-spacing: .18em; max-width: 100%; text-align: center; }
+}
+
+/* ===== Rendimiento en celular ===== */
+@media (max-width: 767px) {
+  body::before { display: none; }                         /* fondo fijo gigante: lo más pesado al hacer scroll */
+  .section--linen, .hero__letter { background-blend-mode: normal; }
+  .envelope { filter: none; }
+  .player--docked { backdrop-filter: none; }
+}
+
+/* ===== Botones oscuros en celular (como "Copiar datos") ===== */
+@media (max-width: 767px) {
+  .btn--ghost,
+  .btn--ghost:hover,
+  .btn--ghost:active {
+    --bg: var(--graphite);
+    --fg: var(--ivory);
+    box-shadow: 0 0 0 4px var(--ivory), 0 0 0 5px var(--gold-soft), var(--shadow);
+  }
 }

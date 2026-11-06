@@ -1,19 +1,18 @@
 /* ==========================================================================
    REPRODUCTOR DE MÚSICA — play/pausa, barra de progreso accesible, tiempos.
-   Nunca reproduce automáticamente.
+   Reproduce automáticamente.
    ========================================================================== */
 (function () {
   'use strict';
 
   const formatTime = (s) => {
     if (!Number.isFinite(s) || s < 0) return '0:00';
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return `${m}:${String(sec).padStart(2, '0')}`;
+    return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   };
 
   const WeddingPlayer = {
     root: null,
+    play() {},   // se redefine en init()
 
     init() {
       const cfg = (window.WEDDING_CONFIG || {}).music || {};
@@ -32,6 +31,7 @@
       artist.textContent = cfg.artist || '';
       if (cfg.cover) root.querySelector('#player-cover').src = cfg.cover;
       audio.volume = typeof cfg.volume === 'number' ? cfg.volume : 0.7;
+      audio.loop = true;
 
       const setError = (msg) => {
         root.classList.add('is-error');
@@ -39,11 +39,12 @@
         artist.textContent = msg;
         btn.disabled = true;
       };
-
       if (!cfg.src) { setError('Agrega tu canción en js/config.js'); return; }
       audio.src = cfg.src;
 
       let seeking = false;
+      let userPaused = false;
+
       const paint = () => {
         const max = Number(seek.max) || 1;
         seek.style.setProperty('--p', `${(Number(seek.value) / max) * 100}%`);
@@ -54,20 +55,28 @@
         btn.setAttribute('aria-label', playing ? 'Pausar música' : 'Reproducir música');
       };
 
+      /* Intenta sonar, salvo que la persona la haya pausado */
+      const tryPlay = () => {
+        if (userPaused || !audio.paused) return;
+        const p = audio.play();
+        if (p && p.catch) p.catch(() => {});
+      };
+      this.play = tryPlay;
+
       btn.addEventListener('click', () => {
         if (audio.paused) {
+          userPaused = false;
           const p = audio.play();
-          if (p && p.catch) p.catch(() => setPlaying(false)); // evita el "Uncaught (in promise)"
+          if (p && p.catch) p.catch(() => setPlaying(false));
         } else {
+          userPaused = true;
           audio.pause();
         }
       });
 
       audio.addEventListener('play', () => setPlaying(true));
       audio.addEventListener('pause', () => setPlaying(false));
-      audio.addEventListener('ended', () => { setPlaying(false); audio.currentTime = 0; });
       audio.addEventListener('error', () => setError('Canción no disponible'));
-
       audio.addEventListener('loadedmetadata', () => {
         seek.max = audio.duration || 100;
         dur.textContent = formatTime(audio.duration);
@@ -79,7 +88,6 @@
         cur.textContent = formatTime(audio.currentTime);
         paint();
       });
-
       seek.addEventListener('input', () => {
         seeking = true;
         cur.textContent = formatTime(Number(seek.value));
@@ -89,9 +97,20 @@
         if (Number.isFinite(audio.duration)) audio.currentTime = Number(seek.value);
         seeking = false;
       });
+
+      /* ---- Música automática ----
+         1) Se intenta al cargar.
+         2) Si el navegador la bloquea (casi todos exigen un toque), arranca en el
+            primer toque/tecla fuera del reproductor. */
+      tryPlay();
+      const events = ['pointerdown', 'touchend', 'click', 'keydown'];
+      const onGesture = (e) => { if (!root.contains(e.target)) tryPlay(); };
+      events.forEach((ev) => document.addEventListener(ev, onGesture, { passive: true }));
+      audio.addEventListener('play', () => {
+        events.forEach((ev) => document.removeEventListener(ev, onGesture));
+      }, { once: true });
     },
 
-    /** Mueve el reproductor fuera del sobre y lo fija abajo. */
     dock() {
       const root = this.root;
       if (!root || root.classList.contains('player--docked')) return;

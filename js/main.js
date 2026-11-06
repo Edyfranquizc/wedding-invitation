@@ -99,39 +99,32 @@
 
   /* ---------- Reproductor: en móvil se pliega a un disco flotante ---------- */ // NUEVO
   function initPlayerDisc() {
-    const player = $('#player');
-    if (!player) return;
-    const cover = $('.player__cover', player);
-    const phone = window.matchMedia('(max-width: 767px)');   // mismo corte que el CSS
+  const player = $('#player');
+  if (!player) return;
+  const cover = $('.player__cover', player);
+  const toggleBtn = $('#player-toggle');
+  const phone = window.matchMedia('(max-width: 767px)');
+  const isDisc = () => player.classList.contains('player--docked') && phone.matches;
 
-    const docked = () => player.classList.contains('player--docked');   // ya flotante (tras abrir el sobre)
-    const toggle = () => { if (docked() && phone.matches) player.classList.toggle('is-expanded'); };
+  const sync = () => {
+    if (isDisc()) {
+      cover.setAttribute('role', 'button');
+      cover.setAttribute('tabindex', '0');
+      cover.setAttribute('aria-label', 'Reproducir o pausar la música');
+    } else {
+      ['role', 'tabindex', 'aria-label'].forEach((a) => cover.removeAttribute(a));
+    }
+  };
+  new MutationObserver(sync).observe(player, { attributes: true, attributeFilter: ['class'] });
+  phone.addEventListener('change', sync);
 
-    // Accesibilidad: la portada actúa como botón solo cuando es disco
-    const sync = () => {
-      if (docked() && phone.matches) {
-        cover.setAttribute('role', 'button');
-        cover.setAttribute('tabindex', '0');
-        cover.setAttribute('aria-label', 'Abrir o cerrar el reproductor de música');
-        cover.setAttribute('aria-expanded', player.classList.contains('is-expanded'));
-      } else {
-        ['role', 'tabindex', 'aria-label', 'aria-expanded'].forEach((a) => cover.removeAttribute(a));
-        if (player.classList.contains('is-expanded')) player.classList.remove('is-expanded');
-      }
-    };
-    // Cada vez que cambian las clases del reproductor (p. ej. al acoplarse), se re-sincroniza
-    new MutationObserver(sync).observe(player, { attributes: true, attributeFilter: ['class'] });
-    phone.addEventListener('change', sync);
-
-    cover.addEventListener('click', toggle);                             // tocar el disco = abrir / cerrar
-    cover.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
-    document.addEventListener('click', (e) => {                          // tocar fuera = plegar
-      if (docked() && !player.contains(e.target)) player.classList.remove('is-expanded');
-    });
-    sync();
-  }
+  // En celular, tocar el disco = pausar / reproducir
+  cover.addEventListener('click', () => { if (isDisc()) toggleBtn.click(); });
+  cover.addEventListener('keydown', (e) => {
+    if (isDisc() && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggleBtn.click(); }
+  });
+  sync();
+}
 
   /* ---------- Apertura del sobre ---------- */
   function initEnvelope() {
@@ -164,6 +157,7 @@
       if (opened) return;
       opened = true;
       btn.disabled = true;
+      window.WeddingPlayer.play();   // el clic es un gesto válido: la música arranca aquí
       window.WeddingAnimations.openEnvelope({
         envelope,
         closed: $('.envelope__img--closed', envelope),
@@ -181,6 +175,17 @@
   function boot() {
     document.documentElement.classList.replace('no-js', 'js');
     imageFallbacks();
+
+    const showText = () => document.documentElement.classList.add('fonts-ready');
+if (document.fonts && document.fonts.load) {
+  Promise.race([
+    Promise.all([
+      document.fonts.load('italic 300 1em "Playwrite GB S"'),
+      document.fonts.load('500 1em "Mozilla Text"'),
+    ]),
+    new Promise((r) => setTimeout(r, 1500)),
+  ]).then(showText, showText);
+} else showText();
 
     // Cada módulo se aísla: si uno falla, los demás siguen funcionando.
     const safe = (name, fn) => { try { fn(); } catch (err) { console.error(`[${name}]`, err); } };

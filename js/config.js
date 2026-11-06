@@ -23,7 +23,7 @@ window.WEDDING_CONFIG = {
   music: {
     title: 'Marry You',          // PLACEHOLDER
     artist: 'Bruno Mars',                // PLACEHOLDER
-    cover: '/assets/images/couple/historia-02.jpg',
+    cover: '/assets/images/couple/historia-01.jpg',
     src: '/assets/music/Bruno Mars - Marry You (Official Lyric Video).mp3',
     volume: 0.7,
   },

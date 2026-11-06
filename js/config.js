@@ -50,7 +50,7 @@ window.WEDDING_CONFIG = {
 
   rsvp: {
     // ID del formulario de Tally: en https://tally.so/r/w4ZQ9a el ID es "w4ZQ9a"
-    tallyFormId: '',
+    tallyFormId: 'e5D2Nq',
     deadline: '2026-12-10',
     closeAfterDeadline: false,   // true = oculta el formulario pasado el 10/12
   },

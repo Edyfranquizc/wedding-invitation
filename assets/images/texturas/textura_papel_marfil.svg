@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="554" viewBox="0 0 300 554">
+  <title>Textura de papel marfil</title>
+  <defs>
+    <clipPath id="paper-clip">
+      <rect width="300" height="554" rx="18" ry="18"/>
+    </clipPath>
+
+    <!-- Grano fino y orgánico del papel -->
+    <filter id="paper-grain" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3"
+                    seed="18" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
+      <feComponentTransfer in="mono" result="soft-grain">
+        <feFuncR type="gamma" amplitude="0.20" exponent="1.8" offset="0.76"/>
+        <feFuncG type="gamma" amplitude="0.17" exponent="1.8" offset="0.73"/>
+        <feFuncB type="gamma" amplitude="0.10" exponent="1.8" offset="0.68"/>
+        <feFuncA type="table" tableValues="0 0.25"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="soft-grain" mode="multiply"/>
+    </filter>
+
+    <!-- Manchas tenues y fibras irregulares -->
+    <filter id="soft-flecks" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025 0.045"
+                    numOctaves="2" seed="7" result="clouds"/>
+      <feColorMatrix in="clouds" type="matrix"
+        values="0.9 0 0 0 0.06
+                0 0.8 0 0 0.05
+                0 0 0.5 0 0.02
+                0 0 0 1 0" result="warm-clouds"/>
+      <feComponentTransfer>
+        <feFuncR type="gamma" amplitude="0.12" exponent="1.2" offset="0.86"/>
+        <feFuncG type="gamma" amplitude="0.10" exponent="1.2" offset="0.83"/>
+        <feFuncB type="gamma" amplitude="0.06" exponent="1.2" offset="0.78"/>
+        <feFuncA type="table" tableValues="0 0.16"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+
+  <g clip-path="url(#paper-clip)">
+    <rect width="300" height="554" fill="#fbf9f4"/>
+    <rect width="300" height="554" fill="#f8f5ed" opacity="0.48" filter="url(#soft-flecks)"/>
+    <rect width="300" height="554" fill="#f8f5ed" opacity="0.42" filter="url(#paper-grain)"/>
+
+    <!-- Pequeñas fibras y motas cálidas, distribuidas de forma irregular -->
+    <g fill="#d9cda9" opacity="0.22">
+      <ellipse cx="8" cy="142" rx="3.2" ry="1.1" transform="rotate(-34 8 142)"/>
+      <ellipse cx="124" cy="46" rx="4.5" ry="1.7" transform="rotate(28 124 46)"/>
+      <ellipse cx="116" cy="198" rx="3.8" ry="2.2" transform="rotate(-42 116 198)"/>
+      <ellipse cx="183" cy="352" rx="4.2" ry="1.5" transform="rotate(18 183 352)"/>
+      <ellipse cx="238" cy="425" rx="5.2" ry="1.4" transform="rotate(23 238 425)"/>
+      <ellipse cx="292" cy="294" rx="2.8" ry="1.1" transform="rotate(-25 292 294)"/>
+      <ellipse cx="67" cy="518" rx="3.6" ry="1.2" transform="rotate(42 67 518)"/>
+      <ellipse cx="154" cy="32" rx="2.5" ry="1.2" transform="rotate(-15 154 32)"/>
+      <ellipse cx="31" cy="388" rx="2.6" ry="1.0" transform="rotate(30 31 388)"/>
+      <ellipse cx="270" cy="82" rx="3.1" ry="1.2" transform="rotate(-38 270 82)"/>
+    </g>
+    <g fill="#e7ddc5" opacity="0.30">
+      <circle cx="38" cy="73" r="1.4"/>
+      <circle cx="145" cy="120" r="1.1"/>
+      <circle cx="205" cy="263" r="1.5"/>
+      <circle cx="92" cy="304" r="1.2"/>
+      <circle cx="258" cy="490" r="1.4"/>
+      <circle cx="18" cy="470" r="1.1"/>
+      <circle cx="220" cy="34" r="1.0"/>
+      <circle cx="171" cy="545" r="1.3"/>
+    </g>
+  </g>
+</svg>

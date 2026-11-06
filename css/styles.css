@@ -584,7 +584,9 @@ body::before {
 /* ----- RSVP ----- */
 .rsvp__deadline {
   display: inline-block; margin-top: 1.2rem !important;
-  padding: .45rem 1.1rem; border: 1px solid var(--gold-soft); border-radius: 999px;
+  padding: .45rem 1.1rem; border: 1px solid var(--graphite);
+  border-radius: 999px;
+  border: 3px solid var(--gold); color: var(--ivory);background-color: var(--graphite); text-transform: uppercase;
   font-size: .8rem; letter-spacing: .06em;
 }
 .rsvp__deadline strong { font-weight: 500; }

@@ -42,10 +42,10 @@ window.WEDDING_CONFIG = {
   // Datos bancarios: completar cuando los novios los envíen.
   // Mientras un valor esté vacío se muestra "Por confirmar" y el botón no copia nada.
   gifts: [
-    { label: 'Titular', value: '' },
-    { label: 'Banco', value: '' },
-    { label: 'Cuenta', value: '' },
-    { label: 'Cédula', value: '' },
+    { label: 'Titular', value: 'Edithgary Franquiz' },
+    { label: 'Banco', value: 'Mercantil' },
+    { label: 'Cédula', value: '19289739' },
+    { label: 'Celular', value: '04142146671' },
   ],
 
   rsvp: {

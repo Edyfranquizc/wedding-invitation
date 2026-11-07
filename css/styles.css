@@ -17,6 +17,7 @@
   --f-title: 'Playwrite GB S', 'Playwrite England SemiJoined', cursive;
   --f-hand: 'Edu QLD Hand', cursive;
   --f-text: 'Mozilla Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-alternative: 'Cormorant Garamond', serif;
 
   /* ----- Texturas de papel (CAMBIA AQUÍ LAS IMÁGENES) ----- */
   --tex-page: url("../assets/images/texturas/bart-wesolek-U2j1u4BWrpM-unsplash\ \(1\).jpg");     /* fondo general de la página y del sobre */
